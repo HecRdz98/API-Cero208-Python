@@ -4,6 +4,7 @@ from routers import auth
 from sqlalchemy import text 
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import database, get_db
+from routers import tokens  # Añade esta importación
 
 app = FastAPI()
 
@@ -18,6 +19,7 @@ app.add_middleware(
 
 # Incluir routers
 app.include_router(auth.router)
+app.include_router(tokens.router)
 
 # Eventos de inicio/shutdown
 @app.on_event("startup")
@@ -29,15 +31,13 @@ async def startup():
 async def shutdown():
     await database.disconnect()  # Desconectar correctamente
 
-@app.get("/", tags=["Home"])
-async def home():
-    return {"message": "Hello World!"}
 
 # Endpoint de prueba de conexión
-@app.get("/test-db")
+@app.get("/test-db", tags=["test"])
 async def test_db(db: AsyncSession = Depends(get_db)):
     try:
         await db.execute(text("SELECT 1"))
         return {"status": "Database connection OK"}
     except Exception as e:
         return {"error": str(e)}
+
