@@ -28,3 +28,14 @@ def get_dids():
         # return result.fetchall()
         return [row._asdict() for row in result]
         # return [dict(row) for row in result.mappings()]
+
+
+def get_did(did):
+    query = "SELECT did, city, state FROM did WHERE did = :did"
+    with engine.connect() as connection:
+        result = connection.execute(text(query), {'did' : did})
+        # return result.fetchall()
+        if(result):
+            return [row._asdict() for row in result]
+        return False
+        # return [dict(row) for row in result.mappings()]

@@ -38,7 +38,7 @@ async def revoke_token(
     token = result.scalar()
     
     if not token:
-        raise HTTPException(status_code=404, detail="Token not found")
+        raise HTTPException(status_code=404, message="Token not found")
     
     await db.delete(token)
     await db.commit()

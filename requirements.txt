@@ -4,6 +4,7 @@ python-jose[cryptography]
 passlib
 python-multipart
 sqlalchemy
+mysql-connector
 asyncmy
 python-dotenv
 email-validator
