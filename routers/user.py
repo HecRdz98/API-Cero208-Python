@@ -1,16 +1,17 @@
-from datetime import datetime
+import os
 import secrets
+from datetime import datetime
+
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from dotenv import load_dotenv
-import os
 
 from database import get_db
-from models.user import User
 from models.token import UserToken
-from schemas.user import LoginRequest, TokenResponse, UserCreate, UserResponse
+from models.user import User
+from schemas.user import LoginRequest, UserCreate, UserResponse
 from security import get_password_hash, verify_password
 
 load_dotenv()
@@ -28,7 +29,7 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     # Verificar si el usuario ya existe
     db_user = await db.execute(
         select(User).where(
-            (User.email == user.email) | 
+            (User.email == user.email) |
             (User.username == user.username)
         )
     )
@@ -53,7 +54,8 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
     return new_user
 
 
-@router.post("/login", response_model=TokenResponse)
+# @router.post("/login", response_model=TokenResponse)
+@router.post("/login")
 async def login(
     login_data: LoginRequest,
     db: AsyncSession = Depends(get_db)
@@ -89,8 +91,6 @@ async def login(
 
     return {
         "token_type": "bearer",
-        "api_token": raw_api_token,
         "token_name": new_token.token_name,
-        "created_at": new_token.created_at,
-        "partial_token": f"{raw_api_token[:6]}...{raw_api_token[-4:]}"
+        "api_token": raw_api_token,
     }

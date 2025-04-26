@@ -1,10 +1,16 @@
-from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
+
+from pydantic import BaseModel, EmailStr, Field
+
 
 class LoginRequest(BaseModel):
     username: str
     password: str
     token_name: str  # Nuevo campo
+
+class Login(BaseModel):
+    username: str
+    password: str
 
 class TokenResponse(BaseModel):
     access_token: str

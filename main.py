@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth
-from sqlalchemy import text 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from database import database, get_db
-from routers import tokens  # Añade esta importación
+from routers import did, tokens, user  # Añade esta importación
 
 app = FastAPI()
 
@@ -18,7 +18,8 @@ app.add_middleware(
 )
 
 # Incluir routers
-app.include_router(auth.router)
+app.include_router(did.router)
+app.include_router(user.router)
 app.include_router(tokens.router)
 
 # Eventos de inicio/shutdown
