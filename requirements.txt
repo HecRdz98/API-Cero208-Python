@@ -8,4 +8,5 @@ mysql-connector
 asyncmy
 python-dotenv
 email-validator
+requests
 bcrypt>=4.0.0

@@ -18,11 +18,17 @@
 
 from sqlalchemy import text
 
-from utils.connection import engine
+from utils.connection import Database
 
+database_name = 'cero208mx_api'
+database = Database(database_name)
+engine = database.engine
 
 def get_dids():
-    query = "SELECT did, city, state FROM did ORDER BY RAND() LIMIT 20"
+    query = "SELECT d.id_hashed AS 'id', d.did, d.phone_code, c.name AS 'country', d.state, d.city, c.phone_code AS 'prefix', c.iso2 as 'country_iso2' \
+        FROM did d \
+        LEFT JOIN country c ON d.id_country = c.id \
+        ORDER BY RAND() LIMIT 20"
     with engine.connect() as connection:
         result = connection.execute(text(query))
         # return result.fetchall()
@@ -31,11 +37,14 @@ def get_dids():
 
 
 def get_did(did):
-    query = "SELECT did, city, state FROM did WHERE did = :did"
+    query = "SELECT d.id_hashed AS 'id', d.did, d.phone_code, c.name AS 'country', d.state, d.city, c.phone_code AS 'prefix', c.iso2 as 'country_iso2' \
+        FROM did d \
+        LEFT JOIN country c ON d.id_country = c.id \
+        WHERE did = :did"
     with engine.connect() as connection:
         result = connection.execute(text(query), {'did' : did})
         # return result.fetchall()
-        if(result):
+        if(result): 
             return [row._asdict() for row in result]
         return False
         # return [dict(row) for row in result.mappings()]

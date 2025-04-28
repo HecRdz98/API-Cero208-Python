@@ -30,4 +30,4 @@ def decrypt(encrypted_data):
     decrypted_data = fernet.decrypt(encrypted_data)
     return decrypted_data.decode()
 
-print(decrypt('gAAAAABoDS-TGCI1tVPaSvCcNvBtP8BKCEGbpBEWapD54jGw2nCMY_LczIKn2QLUXVJ_0XnUgDctoIrNmOr0fy9cJGOl7Uj1-pTLDmn9OnwXTtstJiyqJYKBw1ftZamM1jv6dyBqGn_o'))
+# print(decrypt('gAAAAABoDS-TGCI1tVPaSvCcNvBtP8BKCEGbpBEWapD54jGw2nCMY_LczIKn2QLUXVJ_0XnUgDctoIrNmOr0fy9cJGOl7Uj1-pTLDmn9OnwXTtstJiyqJYKBw1ftZamM1jv6dyBqGn_o'))
