@@ -24,11 +24,12 @@ class DIDWW:
     |<><><><><><><><>| DIDWW Fetchs |<><><><><><><><>|
     '''
 
-    def get_dids(self):
-        params = {
-            # "include" : "did_group,did_group.stock_keeping_units"
-            "include": "did_group.stock_keeping_units"
-        }
+    def get_dids(self, params):
+        # params = {
+        #     # "include" : "did_group,did_group.stock_keeping_units"
+        #     "include": "did_group.stock_keeping_units"
+        # }
+        params['include'] = 'did_group.stock_keeping_units'
         url_request = f"{self.url}/available_dids"
         data = self.__fetch_didww(url_request, params)
         if data.get("status") == False:

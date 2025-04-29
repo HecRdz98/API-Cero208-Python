@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 secret_key = os.getenv("SECRET_KEY")
-print(secret_key)
 
 if (secret_key is None) :
     raise ValueError("No esta definida la clave en el archivo .env")
