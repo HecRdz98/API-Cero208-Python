@@ -14,6 +14,10 @@ from models.user import User
 from schemas.user import LoginRequest, UserCreate, UserResponse
 from security import get_password_hash, verify_password
 
+from starlette.concurrency import run_in_threadpool
+from api.whmcs import create_whmcs_client, get_whmcs_client_by_email
+
+
 load_dotenv()
 
 router = APIRouter(tags=["authentication"])
@@ -47,11 +51,16 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
         email=user.email,
         password=hashed_password
     )
-    
+        
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
+
+    # Crear cliente en WHMCS
+    await run_in_threadpool(create_whmcs_client, user)
+    
     return new_user
+
 
 
 # @router.post("/login", response_model=TokenResponse)
@@ -88,9 +97,13 @@ async def login(
     db.add(new_token)
     await db.commit()
     await db.refresh(new_token)
+    
+    whmcs_client = await run_in_threadpool(get_whmcs_client_by_email, user.email)
+
 
     return {
         "token_type": "bearer",
         "token_name": new_token.token_name,
         "api_token": raw_api_token,
+        "whmcs_client_id": whmcs_client.get("userid")
     }
